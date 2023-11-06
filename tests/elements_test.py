@@ -1,6 +1,6 @@
 import time
 
-from pages.elements_page import TextBoxPage, CheckBoxPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage
 
 
 class TestElements:
@@ -24,6 +24,21 @@ class TestElements:
             check_box_page.click_random_checkbox()
             input_checkbox = check_box_page.get_checked_checkboxes()
             output_result = check_box_page.get_output_rezult()
-            print(input_checkbox)
-            print(output_result)
             assert input_checkbox == output_result, f'Expected selected checkboxes {input_checkbox} but actual {output_result}'
+
+
+    class TestRadioButton:
+
+        def test_radio_button(self, driver):
+            radio_button_page = RadioButtonPage(driver, 'https://demoqa.com/radio-button')
+            radio_button_page.open()
+            radio_button_page.click_the_radio_button('Yes')
+            output_yes = radio_button_page.get_output_rezult_radio_button()
+            radio_button_page.click_the_radio_button('Impressive')
+            output_impressive = radio_button_page.get_output_rezult_radio_button()
+            radio_button_page.click_the_radio_button('No')
+            output_no = radio_button_page.get_output_rezult_radio_button()
+
+            assert output_yes == 'Yes', f'Expected selected radio button "Yes", but actual {output_yes}'
+            assert output_impressive == 'Impressive', f'Expected selected radio button "Impressive", but actual {output_impressive}'
+            assert output_no == 'No', f'Expected selected radio button "No", but actual {output_no}'
