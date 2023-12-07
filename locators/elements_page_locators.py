@@ -64,3 +64,11 @@ class ButtonsPageLocators:
     DOUBLE_CLICK_MESSAGE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
     RIGHT_CLICK_MESSAGE = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
     CLICK_ME_BUTTON_MESSAGE = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
+
+
+class LinksPageLocators:
+
+    # Following links will open new tab
+    HOME_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
+    # Following links will send an api call
+    BAD_REQUEST_LINK = (By.CSS_SELECTOR, "a[id='bad-request']")
