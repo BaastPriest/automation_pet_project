@@ -1,12 +1,16 @@
+import base64
+import os
 import random
 
 import requests
 from selenium.webdriver.common.by import By
 
-from generator.generator import generated_person
+from generator import generator
+from generator.generator import generated_person, generate_file
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
-    WebTablesPageLocators, ButtonsPageLocators, LinksPageLocators
+    WebTablesPageLocators, ButtonsPageLocators, LinksPageLocators, FilePageLocators
 from pages.base_page import BasePage
+
 
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
@@ -22,7 +26,7 @@ class TextBoxPage(BasePage):
         self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
         self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
         self.element_is_visible(self.locators.SUBMIT).click()
-        return full_name,email, current_address, permanent_address
+        return full_name, email, current_address, permanent_address
 
     def check_filled_form(self):
         full_name = self.element_is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
@@ -33,7 +37,6 @@ class TextBoxPage(BasePage):
 
 
 class CheckBoxPage(BasePage):
-
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
@@ -45,10 +48,10 @@ class CheckBoxPage(BasePage):
         while count != 0:
             item = item_list[random.randint(1, 15)]
             if count > 0:
-                 self.go_to_element(item)
-                 item.click()
-                 print(item.text)
-                 count -= 1
+                self.go_to_element(item)
+                item.click()
+                print(item.text)
+                count -= 1
             else:
                 break
 
@@ -58,26 +61,24 @@ class CheckBoxPage(BasePage):
         for box in checked_list:
             title_item = box.find_element("xpath", self.locators.TITLE_ITEM)
             data.append(title_item.text)
-        return str(data).replace(" ","").replace("doc","").replace(".","").lower()
+        return str(data).replace(" ", "").replace("doc", "").replace(".", "").lower()
 
     def get_output_rezult(self):
         result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
         data = []
         for item in result_list:
             data.append(item.text)
-        return str(data).replace(" ","").lower()
+        return str(data).replace(" ", "").lower()
 
 
 class RadioButtonPage(BasePage):
-
     locators = RadioButtonPageLocators()
 
     def click_the_radio_button(self, choice):
-        choices = { 'Yes': self.locators.YES_RADIO_BUTTON,
-            'Impressive': self.locators.IMPRESSIVE_RADIO_BUTTON,
-            'No': self.locators.NO_RADIO_BUTTON }
+        choices = {'Yes': self.locators.YES_RADIO_BUTTON,
+                   'Impressive': self.locators.IMPRESSIVE_RADIO_BUTTON,
+                   'No': self.locators.NO_RADIO_BUTTON}
         self.element_is_visible(choices[choice]).click()
-
 
     def get_output_rezult_radio_button(self):
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
@@ -106,7 +107,6 @@ class WebTablesPage(BasePage):
             self.element_is_clickable(self.locators.SUBMIT_BUTTON).click()
             count -= 1
         return [first_name, last_name, str(age), email, str(salary), department]
-
 
     def check_new_person(self):
         people_list = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
@@ -149,15 +149,12 @@ class WebTablesPage(BasePage):
             data.append(self.check_count_rows())
         return data
 
-
-
     def check_count_rows(self):
         list_rows = self.element_is_present(self.locators.FULL_PEOPLE_LIST)
         return len(list_rows)
 
 
 class ButtonsPage(BasePage):
-
     locators = ButtonsPageLocators()
 
     def click_on_different_button(self, type_click):
@@ -176,10 +173,9 @@ class ButtonsPage(BasePage):
 
 
 class LinksPage(BasePage):
-
     locators = LinksPageLocators()
 
-    def check_new_tab_home_link(self): #TODO create tests for all links
+    def check_new_tab_home_link(self):  # TODO create tests for all links
         home_link = self.element_is_visible(self.locators.HOME_LINK)
         link_href = home_link.get_attribute("href")
         request = requests.get(link_href)
@@ -189,7 +185,7 @@ class LinksPage(BasePage):
             url = self.driver.current_url
             return link_href, url
         else:
-            return link_href, request.status_code #TODO use Try Except
+            return link_href, request.status_code  # TODO use Try Except
 
     def check_broken_link(self, url):
         request = requests.get(url)
@@ -197,3 +193,26 @@ class LinksPage(BasePage):
             self.element_is_present(self.locators.BAD_REQUEST_LINK).click()
         else:
             return request.status_code
+
+
+class FilePage(BasePage):
+    locators = FilePageLocators()
+
+    def upload_file(self):
+        file_name, path = generate_file("txt")
+        self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
+        os.remove(path)
+        text = self.element_is_present(self.locators.UPLOADED_FILE_MSG).text
+        return file_name.split("\\")[-1], text.split("\\")[-1]
+
+    def download_file(self):
+        link = self.element_is_present(self.locators.DOWNLOAD_FILE_BUTTON).get_attribute("href")
+        link_temp = base64.b64decode(link)
+        path_file_name = generator.generate_file_name("jpg")
+        with open(path_file_name, 'wb+') as f:
+            offset = link_temp.find(b'\xff\xd8')
+            f.write(link_temp[offset:])
+            check_file = os.path.exists(path_file_name)
+            f.close()
+        os.remove(path_file_name)
+        return check_file

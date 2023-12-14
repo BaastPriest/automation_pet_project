@@ -1,5 +1,6 @@
 import random
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, \
+    FilePage
 
 
 class TestElements:
@@ -14,7 +15,6 @@ class TestElements:
             assert current_address == output_current_address, f"expected {current_address} but was {output_current_address}"
             assert permanent_address == output_permanent_address, f"expected {permanent_address} but was {output_permanent_address}"
 
-
     class TestCheckBox:
         def test_check_box(self, driver):
             check_box_page = CheckBoxPage(driver, "https://demoqa.com/checkbox")
@@ -24,7 +24,6 @@ class TestElements:
             input_checkbox = check_box_page.get_checked_checkboxes()
             output_result = check_box_page.get_output_rezult()
             assert input_checkbox == output_result, f'Expected selected checkboxes {input_checkbox} but actual {output_result}'
-
 
     class TestRadioButton:
 
@@ -51,7 +50,6 @@ class TestElements:
             table_result = web_tables_page.check_new_person()
             assert new_person in table_result
 
-
         def test_web_table_search_person(self, driver):
             web_tables_page = WebTablesPage(driver, 'https://demoqa.com/webtables')
             web_tables_page.open()
@@ -69,7 +67,6 @@ class TestElements:
             row = web_tables_page.check_searched_person()
             assert age in row, f'The person card has not been changed'
 
-
         def test_web_table_delete_person(self, driver):
             web_tables_page = WebTablesPage(driver, 'https://demoqa.com/webtables')
             web_tables_page.open()
@@ -79,8 +76,7 @@ class TestElements:
             text = web_tables_page.check_deleted()
             assert text == "No rows found"
 
-
-        def test_web_table_change_cout_row(self, driver): #with BUG
+        def test_web_table_change_count_row(self, driver): #with BUG
             web_tables_page = WebTablesPage(driver, 'https://demoqa.com/webtables')
             web_tables_page.open()
             count = web_tables_page.select_up_to_some_rows()
@@ -110,4 +106,18 @@ class TestElements:
             links_page = LinksPage(driver, "https://demoqa.com/links")
             links_page.open()
             response_code = links_page.check_broken_link("https://demoqa.com/bad-request")
-            assert response_code == 400, "The link woeks or the status code is not 400"
+            assert response_code == 400, "The link works or the status code is not 400"
+
+    class TestFilePage:
+
+        def test_upload_file(self, driver):
+            upload_page = FilePage(driver, "https://demoqa.com/upload-download")
+            upload_page.open()
+            file_name, result = upload_page.upload_file()
+            assert file_name == result, "The file has not been uploaded"
+
+        def test_download_file(self, driver):
+            download_page = FilePage(driver, "https://demoqa.com/upload-download")
+            download_page.open()
+            check = download_page.download_file()
+            assert check is True, "The file has not been downloaded"

@@ -1,3 +1,4 @@
+import os
 import random
 
 from data.data import Person
@@ -21,3 +22,16 @@ def generated_person():
         current_address=faker_en.address(),
         permanent_address=faker_ru.address(),  # different address. current_address != permanent_address
     )
+
+
+def generate_file(format_file):
+    path = generate_file_name(format_file)
+    file = open(path, 'w+')
+    file.write(f'Hello World{random.randint(0,999)}')
+    file.close()
+    return file.name, path
+
+
+def generate_file_name(format_file):
+    path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(path, 'filetest') + f'{random.randint(0, 999)}' + '.' + format_file

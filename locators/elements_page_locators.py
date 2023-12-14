@@ -72,3 +72,11 @@ class LinksPageLocators:
     HOME_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")
     # Following links will send an api call
     BAD_REQUEST_LINK = (By.CSS_SELECTOR, "a[id='bad-request']")
+
+
+class FilePageLocators:
+    # upload
+    UPLOAD_FILE = (By.CSS_SELECTOR, "input[id='uploadFile']")
+    UPLOADED_FILE_MSG = (By.CSS_SELECTOR, "p[id='uploadedFilePath']")
+    # download
+    DOWNLOAD_FILE_BUTTON = (By.CSS_SELECTOR, "a[id='downloadButton']")
