@@ -1,6 +1,5 @@
 import os
 import random
-
 from data.data import Person
 from faker import Faker
 
@@ -21,6 +20,7 @@ def generated_person():
         email=faker_en.email(),
         current_address=faker_en.address(),
         permanent_address=faker_ru.address(),  # different address. current_address != permanent_address
+        mobile=faker_en.basic_phone_number()
     )
 
 
@@ -35,3 +35,54 @@ def generate_file(format_file):
 def generate_file_name(format_file):
     path = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(path, 'filetest') + f'{random.randint(0, 999)}' + '.' + format_file
+
+
+def generate_subjects(): # TODO
+    pass
+
+
+    #     value: 1,
+    #     label: "Hindi"
+    # }, {
+    #     value: 2,
+    #     label: "English"
+    # }, {
+    #     value: 3,
+    #     label: "Maths"
+    # }, {
+    #     value: 4,
+    #     label: "Physics"
+    # }, {
+    #     value: 5,
+    #     label: "Chemistry"
+    # }, {
+    #     value: 6,
+    #     label: "Biology"
+    # }, {
+    #     value: 7,
+    #     label: "Computer Science"
+    # }, {
+    #     value: 8,
+    #     label: "Commerce"
+    # }, {
+    #     value: 9,
+    #     label: "Accounting"
+    # }, {
+    #     value: 10,
+    #     label: "Economics"
+    # }, {
+    #     value: 11,
+    #     label: "Arts"
+    # }, {
+    #     value: 12,
+    #     label: "Social Studies"
+    # }, {
+    #     value: 13,
+    #     label: "History"
+    # }, {
+    #     value: 14,
+    #     label: "Civics"
+    # }]
+
+def convert_phone_number_live_only_numbers(phone_number):
+    return "".join(c for c in phone_number if c.isdecimal())
