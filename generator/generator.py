@@ -24,17 +24,24 @@ def generated_person():
     )
 
 
-def generate_file(format_file):
-    path = generate_file_name(format_file)
+def generate_text_file(extension):
+    """Generate file with different file extension."""
+    path = generate_file_name(extension)
     file = open(path, 'w+')
     file.write(f'Hello World{random.randint(0,999)}')
     file.close()
     return file.name, path
 
 
-def generate_file_name(format_file):
+def generate_file_name(extension):
     path = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(path, 'filetest') + f'{random.randint(0, 999)}' + '.' + format_file
+    return os.path.join(path, 'filetest') + f'{random.randint(0, 999)}' + '.' + extension
+
+
+def select_one_random_photo_of_a_cat():
+    images_directory = os.path.abspath(".."+os.sep+"images")
+    file = random.choice(os.listdir(images_directory))
+    return os.path.join(images_directory, file)
 
 
 def generate_subjects(): # TODO

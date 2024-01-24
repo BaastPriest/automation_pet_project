@@ -1,6 +1,8 @@
 import os
 from selenium.webdriver import Keys
-from generator.generator import generated_person, generate_file, convert_phone_number_live_only_numbers
+
+from generator.generator import generated_person, convert_phone_number_live_only_numbers, \
+    select_one_random_photo_of_a_cat
 from locators.forms_page_locators import FormsPageLocators
 from pages.base_page import BasePage
 
@@ -10,7 +12,7 @@ class FormsPage(BasePage):
 
     def fill_form_fields(self):
         person = next(generated_person())
-        file_name, path = generate_file(".txt")   # TODO generate photo
+        file_name = select_one_random_photo_of_a_cat()
         self.remove_footer()
         formatted_phone_num = convert_phone_number_live_only_numbers(person.mobile)
         self.element_is_visible(self.locators.FIRST_NAME_LOCATOR).send_keys(person.first_name)
@@ -21,8 +23,7 @@ class FormsPage(BasePage):
         self.element_is_visible(self.locators.SUBJECTS_LABEL_LOCATOR).send_keys('Maths') # TODO
         self.element_is_visible(self.locators.SUBJECTS_LABEL_LOCATOR).send_keys(Keys.RETURN)
         self.element_is_visible(self.locators.HOBBIES_CHECKBOX_LOCATOR).click()
-        self.element_is_present(self.locators.UPLOAD_PICTURE_BUTTON_LOCATOR).send_keys(path)
-        os.remove(file_name)
+        self.element_is_present(self.locators.UPLOAD_PICTURE_BUTTON_LOCATOR).send_keys(file_name)
         self.element_is_visible(self.locators.CURRENT_ADDRESS_LOCATOR).send_keys(person.current_address)
         self.go_to_element(self.element_is_present(self.locators.STATE_SELECT_LOCATOR))
         self.element_is_visible(self.locators.STATE_SELECT_LOCATOR).click()
@@ -39,3 +40,7 @@ class FormsPage(BasePage):
             self.go_to_element(item)
             data.append(item.text)
         return data
+
+    def upload_photo(self):
+        file_name = select_one_random_photo_of_a_cat()
+        self.element_is_present(self.locators.UPLOAD_PICTURE_BUTTON_LOCATOR).send_keys(file_name)

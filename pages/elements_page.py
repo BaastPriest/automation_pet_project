@@ -8,7 +8,7 @@ from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 
 from generator import generator
-from generator.generator import generated_person, generate_file
+from generator.generator import generated_person, generate_text_file
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
     WebTablesPageLocators, ButtonsPageLocators, LinksPageLocators, FilePageLocators, DynamicPropertiesPageLocators
 from pages.base_page import BasePage
@@ -65,7 +65,7 @@ class CheckBoxPage(BasePage):
             data.append(title_item.text)
         return str(data).replace(" ", "").replace("doc", "").replace(".", "").lower()
 
-    def get_output_rezult(self):
+    def get_output_result(self):
         result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)
         data = []
         for item in result_list:
@@ -201,7 +201,7 @@ class FilePage(BasePage):
     locators = FilePageLocators()
 
     def upload_file(self):
-        file_name, path = generate_file("txt")
+        file_name, path = generate_text_file("txt")
         self.element_is_present(self.locators.UPLOAD_FILE).send_keys(path)
         os.remove(path)
         text = self.element_is_present(self.locators.UPLOADED_FILE_MSG).text
