@@ -22,7 +22,7 @@ class FormsPage(BasePage):
         self.element_is_visible(self.locators.SUBJECTS_LABEL_LOCATOR).send_keys(Keys.RETURN)
         self.element_is_visible(self.locators.HOBBIES_CHECKBOX_LOCATOR).click()
         self.element_is_present(self.locators.UPLOAD_PICTURE_BUTTON_LOCATOR).send_keys(path)
-        os.remove(path) # TODO delete file
+        os.remove(file_name)
         self.element_is_visible(self.locators.CURRENT_ADDRESS_LOCATOR).send_keys(person.current_address)
         self.go_to_element(self.element_is_present(self.locators.STATE_SELECT_LOCATOR))
         self.element_is_visible(self.locators.STATE_SELECT_LOCATOR).click()
