@@ -6,3 +6,17 @@ class BrowserWindowsPageLocators:
     NEW_TAB_BUTTON = (By.CSS_SELECTOR, "button[id='tabButton']")
     TITLE_NEW = (By.CSS_SELECTOR,"h1[id='sampleHeading']")
     NEW_WINDOW_BUTTON = (By.CSS_SELECTOR, "button[id='windowButton']")
+
+class AlertsPageLocators:
+
+    BUTTON_TO_SEE_ALERT = (By.CSS_SELECTOR, "button[id='alertButton']")
+    BUTTON_ALERT_AFTER_5_SEC = (By.CSS_SELECTOR, "button[id='timerAlertButton']")
+
+    BUTTON_ALERT_CONFORM_BOX = (By.CSS_SELECTOR, "button[id='confirmButton']")
+    CONFIRM_RESULT = (By.CSS_SELECTOR, "span[id='confirmResult']")
+
+    BUTTON_ALERT_PROMPT_BOX = (By.CSS_SELECTOR, "button[id='promtButton']")
+    PROMPT_RESULT = (By.CSS_SELECTOR, "span[id='promptResult']")
+
+
+
