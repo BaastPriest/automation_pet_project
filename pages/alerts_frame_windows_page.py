@@ -1,7 +1,8 @@
 import random
 import time
 from selenium.common import UnexpectedAlertPresentException
-from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators
+from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, \
+    NestedFramesLocators
 from pages.base_page import BasePage
 
 
@@ -76,3 +77,16 @@ class FramesPage(BasePage):
             self.driver.switch_to.frame(frame)  # TODO move to Base Page
             text = self.element_is_present(self.locators.TITLE_FRAME).text
             return [text, width, height]
+
+class NestedFramesPage(BasePage):
+
+    locators = NestedFramesLocators()
+
+    def check_nested_frame(self):  #TODO
+        parent_frame = self.element_is_present(self.locators.PARENT_FRAME)
+        self.driver.switch_to.frame(parent_frame)
+        parent_text = self.element_is_present(self.locators.PARENT_TEXT).text
+        child_frame = self.element_is_present(self.locators.CHILD_FRAME)
+        self.driver.switch_to.frame(child_frame)
+        child_text = self.element_is_present(self.locators.CHILD_TEXT).text
+        return parent_text, child_text
