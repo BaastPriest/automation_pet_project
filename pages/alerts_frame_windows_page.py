@@ -2,7 +2,7 @@ import random
 import time
 from selenium.common import UnexpectedAlertPresentException
 from locators.alerts_frame_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, \
-    NestedFramesLocators
+    NestedFramesLocators, ModalDialogsLocators
 from pages.base_page import BasePage
 
 
@@ -21,6 +21,7 @@ class BrowserWindowsPage(BasePage):
         self.driver.switch_to.window(self.driver.window_handles[1])
         text_title = self.element_is_present(self.locators.TITLE_NEW).text
         return text_title
+
 
 class AlertsPage(BasePage):
 
@@ -57,6 +58,7 @@ class AlertsPage(BasePage):
         text_result = self.element_is_present(self.locators.PROMPT_RESULT).text
         return text, text_result
 
+
 class FramesPage(BasePage):
 
     locators = FramesPageLocators()
@@ -78,6 +80,7 @@ class FramesPage(BasePage):
             text = self.element_is_present(self.locators.TITLE_FRAME).text
             return [text, width, height]
 
+
 class NestedFramesPage(BasePage):
 
     locators = NestedFramesLocators()
@@ -90,3 +93,21 @@ class NestedFramesPage(BasePage):
         self.driver.switch_to.frame(child_frame)
         child_text = self.element_is_present(self.locators.CHILD_TEXT).text
         return parent_text, child_text
+
+
+class ModalDialogsPage(BasePage):
+
+    locators = ModalDialogsLocators()
+
+    def check_modal_dialogs(self):
+        self.element_is_visible(self.locators.MODAL_SMALL_BUTTON).click()
+        modal_small_title = self.element_is_visible(self.locators.MODAL_SMALL_TITLE).text
+        modal_small_body = self.element_is_visible(self.locators.MODAL_SMALL_BODY).text
+        self.element_is_clickable(self.locators.MODAL_SMALL_CLOSE_BUTTON).click()
+
+        self.element_is_visible(self.locators.MODAL_LARGE_BUTTON).click()
+        modal_large_title = self.element_is_visible(self.locators.MODAL_LARGE_TITLE).text
+        modal_large_body = self.element_is_visible(self.locators.MODAL_LARGE_BODY).text
+        self.element_is_clickable(self.locators.MODAL_lARGE_CLOSE_BUTTON).click()
+
+        return [modal_small_title, len(modal_small_body)], [modal_large_title, len(modal_large_body)]
