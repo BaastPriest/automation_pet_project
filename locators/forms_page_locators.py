@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class FormsPageLocators:
+
     FIRST_NAME_LOCATOR = (By.CSS_SELECTOR, 'input[id="firstName"]')
     LAST_NAME_LOCATOR = (By.CSS_SELECTOR, 'input[id="lastName"]')
     EMAIL_LOCATOR = (By.CSS_SELECTOR, 'input[id="userEmail"]')

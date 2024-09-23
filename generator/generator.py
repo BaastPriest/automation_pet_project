@@ -35,6 +35,7 @@ def generate_text_file(extension):
 
 def generate_file_name(extension):
     path = os.path.dirname(os.path.abspath(__file__))
+
     return os.path.join(path, 'filetest') + f'{random.randint(0, 999)}' + '.' + extension
 
 
