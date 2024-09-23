@@ -1,9 +1,4 @@
-import base64
-import os
-import random
-import time
-import allure
-import requests
+import base64, os, random, time, allure, requests
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from generator import generator
@@ -86,9 +81,12 @@ class RadioButtonPage(BasePage):
     @allure.step("Click the radio button")
     def click_the_radio_button(self, choice):
         choices = {'Yes': self.locators.YES_RADIO_BUTTON,
-                   'Impressive': self.locators.IMPRESSIVE_RADIO_BUTTON,
-                   'No': self.locators.NO_RADIO_BUTTON}
+                   'Impressive': self.locators.IMPRESSIVE_RADIO_BUTTON}
         self.element_is_visible(choices[choice]).click()
+
+    @allure.step("Check disabled radio button")
+    def check_disabled_radio_button(self):
+        self.element_is_visible(self.locators.NO_RADIO_BUTTON)
 
     @allure.step("Get output result of radio button")
     def get_output_result_radio_button(self):

@@ -1,6 +1,7 @@
 import allure
 from pages.forms_page import FormsPage
 
+
 @allure.suite("Forms")
 class TestForms:
     @allure.feature("FormsPage")

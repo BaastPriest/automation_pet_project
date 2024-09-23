@@ -30,7 +30,7 @@ class RadioButtonPageLocators:
 
     YES_RADIO_BUTTON = (By.CSS_SELECTOR, "label[class^='custom-control'][for='yesRadio']")
     IMPRESSIVE_RADIO_BUTTON = (By.CSS_SELECTOR, "label[class^='custom-control'][for='impressiveRadio']")
-    NO_RADIO_BUTTON = (By.CSS_SELECTOR, "label[class^='custom-control'][for='noRadio']")
+    NO_RADIO_BUTTON = (By.CSS_SELECTOR, "//input[@id='noRadio' and @disabled]")
     OUTPUT_RESULT = (By.CSS_SELECTOR, "span[class='text-success']")
 
 

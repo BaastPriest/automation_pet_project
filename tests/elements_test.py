@@ -1,6 +1,10 @@
-import random
-import allure
+import os
+import random, allure
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, FilePage, DynamicPropertiesPage
+
 
 @allure.suite("Elements")
 class TestElements:
@@ -14,8 +18,8 @@ class TestElements:
             output_name, output_email, output_current_address, output_permanent_address = text_box_page.check_filled_form()
             assert full_name == output_name, f"expected {full_name} but was {output_name}"
             assert email == output_email, f"expected {email} but was {output_email}"
-            assert current_address == output_current_address, f"expected {current_address} but was {output_current_address}"
-            assert permanent_address == output_permanent_address, f"expected {permanent_address} but was {output_permanent_address}"
+            assert current_address.replace("\n", " ") == output_current_address.replace("\n", " "), f"expected {current_address} but was {output_current_address}"
+            assert permanent_address.replace("\n", " ") == output_permanent_address.replace("\n", " "), f"expected {permanent_address} but was {output_permanent_address}"
 
     @allure.feature("CheckBox")
     class TestCheckBox:
@@ -36,15 +40,23 @@ class TestElements:
             radio_button_page = RadioButtonPage(driver, 'https://demoqa.com/radio-button')
             radio_button_page.open()
             radio_button_page.click_the_radio_button('Yes')
-            output_yes = radio_button_page.get_output_rezult_radio_button()
+            output_yes = radio_button_page.get_output_result_radio_button()
             radio_button_page.click_the_radio_button('Impressive')
-            output_impressive = radio_button_page.get_output_rezult_radio_button()
-            radio_button_page.click_the_radio_button('No')
-            output_no = radio_button_page.get_output_rezult_radio_button()
-
+            output_impressive = radio_button_page.get_output_result_radio_button()
             assert output_yes == 'Yes', f'Expected selected radio button "Yes", but actual {output_yes}'
             assert output_impressive == 'Impressive', f'Expected selected radio button "Impressive", but actual {output_impressive}'
-            assert output_no == 'No', f'Expected selected radio button "No", but actual {output_no}'
+
+        @allure.title("Check disabled RadioButton")
+        def test_disabled_radio_button(self, driver):
+            radio_button_page = RadioButtonPage(driver, 'https://demoqa.com/radio-button')
+            radio_button_page.open()
+            disabled_radio_button = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//input[@id='noRadio' and @disabled]")))
+            assert disabled_radio_button.get_attribute(
+                'disabled') == 'true', 'Radio button should be disabled, but it is not.'
+            assert not disabled_radio_button.is_selected(), 'Disabled radio button should not be selectable.'
+            driver.execute_script("arguments[0].click();", disabled_radio_button)
+            assert not disabled_radio_button.is_selected(), 'Disabled radio button should not change its state after a click.'
 
     @allure.feature("WebTables")
     class TestWebTables:
@@ -54,7 +66,7 @@ class TestElements:
             web_tables_page.open()
             new_person = web_tables_page.add_new_person()
             table_result = web_tables_page.check_new_person()
-            assert new_person in table_result
+            assert new_person == [x.strip() for x in table_result]
 
         @allure.title("Check to search a person in the table")
         def test_web_table_search_person(self, driver):
@@ -128,7 +140,7 @@ class TestElements:
             upload_page = FilePage(driver, "https://demoqa.com/upload-download")
             upload_page.open()
             file_name, result = upload_page.upload_file()
-            assert file_name == result, "The file has not been uploaded"
+            assert os.path.basename(file_name) == result, "The file has not been uploaded"
 
         @allure.title("Check download file")
         def test_download_file(self, driver):

@@ -2,6 +2,7 @@ import allure
 from pages.alerts_frame_windows_page import BrowserWindowsPage, AlertsPage, FramesPage, NestedFramesPage, \
     ModalDialogsPage
 
+
 @allure.suite("AlertsFrameWindow")
 class TestAlertsFrameWindow:
     @allure.feature("BrowserWindows")
@@ -82,4 +83,4 @@ class TestAlertsFrameWindow:
             assert modal_small[0] == "Small Modal", f'Should be "Small Modal", but was {modal_small[0]}'
             assert modal_large[0] == "Large Modal", f'Should be "Large Modal", but was {modal_large[0]}'
             assert modal_large[1] > modal_small[1], (f'length large modal text is {modal_large[1]}, '
-                                                     f'length small modal text is {modal_small[1]} ')
+                                            f'length small modal text is {modal_small[1]} ')
