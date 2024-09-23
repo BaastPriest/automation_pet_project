@@ -13,6 +13,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install pytest selenium allure-pytest webdriver_manager
         pip install pytest selenium allure-pytest
 
     - name: Run tests
