@@ -1,4 +1,6 @@
-import pytest, sys, os, tempfile
+from datetime import datetime
+import allure
+import pytest, os, tempfile, sys
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -8,23 +10,44 @@ from selenium.common.exceptions import WebDriverException
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 @pytest.fixture(scope="function")
-def driver():
+def driver(request):
     chrome_options = Options()
+    # temporary directory
+    profile_path = tempfile.mkdtemp()
 
-    # temporary directory for profile
-    with tempfile.TemporaryDirectory() as profile_path:
-        chrome_options.add_argument(f"user-data-dir={profile_path}")
-
-    # prevents an error in the final block if the driver was not created successfully
     driver = None
-
-    # Run ChromeDriver
     try:
+        chrome_options.add_argument(f"user-data-dir={profile_path}")
         driver = webdriver.Chrome(options=chrome_options, service=ChromeService(ChromeDriverManager().install()))
         driver.maximize_window()
         yield driver
+
     except WebDriverException as e:
-        pytest.fail(f"Ошибка при запуске ChromeDriver: {e}")
+        pytest.fail(f"Error on startup ChromeDriver: {e}")
+
     finally:
-        if driver: # check if it was created successfully (not equal to None)
-            driver.quit()
+        try:
+            outcome = request.node.rep_call
+            if driver:
+                if outcome.failed:
+                    attach = driver.get_screenshot_as_png()
+                    allure.attach(attach,
+                                  name=f"Screenshot {datetime.today()}",
+                                  attachment_type=allure.attachment_type.PNG)
+                    allure.attach(driver.current_url, name="Current URL",
+                                  attachment_type=allure.attachment_type.TEXT)
+        finally:
+            if driver:
+                driver.quit()
+            os.rmdir(profile_path)
+
+
+@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    # returns a report object after each test
+    outcome = yield
+    rep = outcome.get_result()
+
+    # Assign report to current test to access it in fixture
+    if rep.when == "call":
+        item.rep_call = rep

@@ -1,9 +1,6 @@
 import random
-
 import allure
-
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, \
-    FilePage, DynamicPropertiesPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablesPage, ButtonsPage, LinksPage, FilePage, DynamicPropertiesPage
 
 @allure.suite("Elements")
 class TestElements:
