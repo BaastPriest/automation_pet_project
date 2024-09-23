@@ -39,7 +39,8 @@ def driver(request):
         finally:
             if driver:
                 driver.quit()
-            os.rmdir(profile_path)
+            if profile_path and os.path.exists(profile_path):
+                shutil.rmtree(profile_path)
 
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
