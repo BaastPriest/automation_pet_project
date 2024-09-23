@@ -1,6 +1,7 @@
 import base64, os, random, time, allure, requests
 from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 from generator import generator
 from generator.generator import generated_person, generate_text_file
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonPageLocators, \
@@ -257,7 +258,8 @@ class DynamicPropertiesPage(BasePage):
     def check_changed_color(self):
         color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
         color_button_before = color_button.value_of_css_property("color")
-        time.sleep(5)
+        WebDriverWait(self.driver, 5, poll_frequency=0.1).until(
+            lambda driver: color_button.value_of_css_property("color") != color_button_before)
         color_button_after = color_button.value_of_css_property("color")
         return color_button_before, color_button_after
 
