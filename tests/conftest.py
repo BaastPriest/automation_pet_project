@@ -14,6 +14,12 @@ def driver(request):
     # temporary directory
     profile_path = tempfile.mkdtemp()
 
+    # options for CI/CD
+    chrome_options.add_argument("--headless") #Launches Chrome in the background, without displaying the interface
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+
     driver = None
     try:
         chrome_options.add_argument(f"user-data-dir={profile_path}")
