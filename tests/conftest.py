@@ -1,6 +1,5 @@
 from datetime import datetime
-import allure, shutil
-import pytest, os, tempfile, sys
+import allure, shutil, pytest, os, tempfile, sys
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -26,22 +25,17 @@ def driver(request):
         pytest.fail(f"Error on startup ChromeDriver: {e}")
 
     finally:
-        try:
-            outcome = request.node.rep_call
-            if driver:
-                if outcome.failed:
-                    attach = driver.get_screenshot_as_png()
-                    allure.attach(attach,
-                                  name=f"Screenshot {datetime.today()}",
-                                  attachment_type=allure.attachment_type.PNG)
-                    allure.attach(driver.current_url, name="Current URL",
-                                  attachment_type=allure.attachment_type.TEXT)
-        finally:
-            if driver:
-                driver.quit()
-            if profile_path and os.path.exists(profile_path):
-                shutil.rmtree(profile_path)
-
+        if driver:
+            if hasattr(request.node, 'rep_call') and request.node.rep_call.failed:
+                attach = driver.get_screenshot_as_png()
+                allure.attach(attach,
+                              name=f"Screenshot {datetime.today()}",
+                              attachment_type=allure.attachment_type.PNG)
+                allure.attach(driver.current_url, name="Current URL",
+                              attachment_type=allure.attachment_type.TEXT)
+            driver.quit()
+        if profile_path and os.path.exists(profile_path):
+            shutil.rmtree(profile_path)
 
 @pytest.hookimpl(hookwrapper=True, tryfirst=True)
 def pytest_runtest_makereport(item, call):
