@@ -1,5 +1,5 @@
 from datetime import datetime
-import allure
+import allure, shutil
 import pytest, os, tempfile, sys
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
