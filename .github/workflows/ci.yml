@@ -43,8 +43,8 @@ jobs:
       uses: actions/checkout@v4
       if: always()
       with:
-      ref: gh-pages
-      path: gh-pages
+        ref: gh-pages
+        path: gh-pages
       continue-on-error: true
 
     - name: Allure Report action
